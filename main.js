@@ -13,31 +13,39 @@ treeSvg.attr("viewBox", `0 0 ${treeW} ${treeH}`);
 const barW = 600, barH = 350;
 barSvg.attr("viewBox", `0 0 ${barW} ${barH}`);
 
-let currentSelectedOrigin = null; 
+let currentSelectedAirport = null; 
 let globalFlowData = [];          
-let globalTreeData = null;
+let allAirports = []; 
 
 Promise.all([
-    d3.json("counties-10t.json"), // ⚠強烈建議：請換成未投影的 raw 經緯度 TopoJSON
-    d3.json("d3_flow_map.json"),
-    d3.json("d3_treemap.json")
-]).then(([topoData, flowData, treeData]) => {
+    d3.json("counties-10t.json"), 
+    d3.json("d3_flow_map.json")   
+]).then(([topoData, flowData]) => {
     
     globalFlowData = flowData;
-    globalTreeData = treeData;
 
-    const origins = treeData.children.map(d => d.name);
-    const colorScale = d3.scaleOrdinal(d3.schemeTableau10).domain(origins);
+    const airportSet = new Map();
+    flowData.forEach(d => {
+        if (!airportSet.has(d.origin_name)) airportSet.set(d.origin_name, d.origin_coord);
+        if (!airportSet.has(d.dest_name)) airportSet.set(d.dest_name, d.dest_coord);
+    });
+    
+    allAirports = Array.from(airportSet.keys());
+    const airportNodes = allAirports.map(name => ({
+        name: name,
+        coord: airportSet.get(name)
+    }));
+
+    const colorScale = d3.scaleOrdinal(d3.schemeTableau10).domain(allAirports);
     const strokeScale = d3.scaleSqrt().domain([0, d3.max(flowData, d => d.passengers)]).range([1.5, 12]);
 
     // ==========================================
     // View 1: 繪製地理流向圖 (Map)
     // ==========================================
-    // 標準台灣麥卡托投影
     const projection = d3.geoMercator()
-        .center([121, 24])
-        .scale(6000)
-        .translate([mapW / 2 +10, mapH / 2]);
+        .center([120, 24]) 
+        .scale(6500)
+        .translate([mapW / 2, mapH / 2]);
     const pathGenerator = d3.geoPath().projection(projection);
 
     const mapLayer = mapSvg.append("g");
@@ -49,7 +57,9 @@ Promise.all([
         .join("path")
         .attr("class", "county")
         .attr("d", pathGenerator)
-        .on("click", resetFilter); // 點擊海面/空地取消選取
+        // 【隱含操作】點擊地圖背景重置
+        .on("click", resetFilter)
+        .append("title").text("點擊空白處重置全域"); 
 
     const routeG = mapLayer.append("g");
     function renderMapRoutes(data) {
@@ -75,12 +85,6 @@ Promise.all([
             );
     }
 
-    const airportNodes = Array.from(new Set(flowData.map(d => d.origin_name)))
-        .map(name => {
-            const row = flowData.find(d => d.origin_name === name);
-            return { name: name, coord: row.origin_coord };
-        });
-
     mapLayer.append("g")
         .selectAll(".airport-node")
         .data(airportNodes)
@@ -90,40 +94,66 @@ Promise.all([
         .attr("cy", d => projection(d.coord)[1])
         .attr("r", 6)
         .attr("fill", d => colorScale(d.name))
-        .on("click", (event, d) => filterByOrigin(d.name)) // 綁定 Toggle 過濾
-        .append("title").text(d => d.name);
+        .attr("tabindex", "0")
+        .on("mouseover", function(event, d) {
+            d3.select(this).transition().duration(200).attr("r", 10);
+            
+            // 若該機場已選取，提示文字改為「取消選取」
+            const isSelected = currentSelectedAirport === d.name;
+            tooltip.style("opacity", 1)
+                .html(`<strong>機場：</strong> ${d.name}<br/><span style="font-size:11px; color:#cbd5e1;">點擊${isSelected ? '取消選取' : '過濾此機場航線'}</span>`)
+                .style("left", (event.pageX + 15) + "px")
+                .style("top", (event.pageY - 28) + "px");
+        })
+        .on("mouseout", function() {
+            d3.select(this).transition().duration(200).attr("r", 6);
+            tooltip.style("opacity", 0);
+        })
+        .on("click", (event, d) => filterByAirport(d.name)) 
+        .on("keydown", (event, d) => { if(event.key === "Enter") filterByAirport(d.name); });
 
     // ==========================================
     // View 2: 動態階層樹狀圖 (Treemap)
     // ==========================================
     const treeG = treeSvg.append("g").attr("transform", "translate(0, 30)");
     
-    function renderTreemap(originFilter) {
-        let nodeToDraw;
-        let isGlobal = !originFilter;
+    function renderTreemap(airportFilter) {
+        let isGlobal = !airportFilter;
+        let rootData;
 
         if (isGlobal) {
-            // [修正3] 全域：自行組裝一層階層，計算各機場總流量
-            const globalTree = {
-                name: "全台機場",
-                children: globalTreeData.children.map(d => ({
-                    name: d.name,
-                    value: d3.sum(d.children, c => c.value),
-                    origin_name: d.name, // 標記為出發機場
-                    isOrigin: true
-                }))
-            };
-            nodeToDraw = d3.hierarchy(globalTree).sum(d => d.value).sort((a, b) => b.value - a.value);
+            const globalChildren = allAirports.map(airport => {
+                const connected = globalFlowData.filter(d => d.origin_name === airport || d.dest_name === airport);
+                return {
+                    name: airport,
+                    value: d3.sum(connected, d => d.passengers),
+                    isGlobalNode: true
+                };
+            }).filter(d => d.value > 0);
+            rootData = { name: "全台機場", children: globalChildren };
         } else {
-            // 局部過濾：找出點選的機場，畫出目的地
-            const originData = globalTreeData.children.find(d => d.name === originFilter);
-            nodeToDraw = d3.hierarchy(originData).sum(d => d.value).sort((a, b) => b.value - a.value);
+            const connected = globalFlowData.filter(d => d.origin_name === airportFilter || d.dest_name === airportFilter);
+            const localChildren = connected.map(d => {
+                const targetName = d.origin_name === airportFilter ? d.dest_name : d.origin_name;
+                return {
+                    name: targetName,
+                    value: d.passengers,
+                    route_name: d.route_name,
+                    flights: d.flights,
+                    load_factor: d.load_factor,
+                    isGlobalNode: false
+                };
+            });
+            rootData = { name: airportFilter, children: localChildren };
         }
+
+        const nodeToDraw = d3.hierarchy(rootData)
+            .sum(d => Math.pow(d.value || 0, 0.3)) 
+            .sort((a, b) => b.data.value - a.data.value); 
 
         d3.treemap().size([treeW, treeH - 40]).paddingInner(2).paddingTop(0)(nodeToDraw);
 
         const cells = treeG.selectAll(".tree-cell")
-            // 使用 name 作為 key，保證動畫順暢過渡
             .data(nodeToDraw.leaves(), d => d.data.name);
 
         const enterCells = cells.enter().append("g")
@@ -135,25 +165,25 @@ Promise.all([
             .attr("fill", d => isGlobal ? colorScale(d.data.name) : colorScale(d.parent.data.name))
             .attr("width", d => Math.max(0, d.x1 - d.x0))
             .attr("height", d => Math.max(0, d.y1 - d.y0))
-            .on("mouseover", (event, d) => handleMouseOver(event, d.data, isGlobal ? "origin" : "route"))
+            .attr("tabindex", "0")
+            .on("mouseover", (event, d) => handleMouseOver(event, d.data, isGlobal ? "global_airport" : "route"))
             .on("mouseout", handleMouseOut)
-            // 如果在全域點擊方塊，也能觸發過濾！
-            .on("click", (event, d) => { if(isGlobal) filterByOrigin(d.data.name); });
+            // 點擊事件：全域時進入該機場，已選取時則維持現狀 (或由其他機制重置)
+            .on("click", (event, d) => { if(isGlobal) filterByAirport(d.data.name); });
 
         enterCells.append("text").attr("class", "treemap-label")
             .attr("x", 4).attr("y", 14).text(d => d.data.name);
         enterCells.append("text").attr("class", "treemap-sublabel")
             .attr("x", 4).attr("y", 26).text(d => d.data.value.toLocaleString() + "人");
 
-        // 動畫過渡
         const updateCells = enterCells.merge(cells);
-        updateCells.transition().duration(600)
-            .attr("transform", d => `translate(${d.x0},${d.y0})`);
+        updateCells.transition().duration(600).attr("transform", d => `translate(${d.x0},${d.y0})`);
         updateCells.select("rect").transition().duration(600)
             .attr("width", d => Math.max(0, d.x1 - d.x0))
             .attr("height", d => Math.max(0, d.y1 - d.y0));
+            
         updateCells.selectAll("text").transition().duration(600)
-            .style("opacity", d => (d.x1 - d.x0) > 45 && (d.y1 - d.y0) > 30 ? 1 : 0);
+            .style("opacity", d => (d.x1 - d.x0) > 35 && (d.y1 - d.y0) > 15 ? 1 : 0);
 
         cells.exit().transition().duration(400).style("opacity", 0).remove();
     }
@@ -192,38 +222,39 @@ Promise.all([
     }
 
     // 初始渲染
-    renderMapRoutes(flowData);
+    renderMapRoutes(globalFlowData);
     renderTreemap(null);
-    renderBarchart(flowData);
+    renderBarchart(globalFlowData);
 
     // ==========================================
-    // 核心連動：智慧判斷 Hover 是「單一航線」還是「整個機場」
+    // 核心連動：智慧判斷與事件調度
     // ==========================================
     function handleMouseOver(event, dataObj, type) {
-        const nameToMatch = dataObj.name || dataObj.route_name; 
+        let targetRoutes = [];
         
+        if (type === "global_airport") {
+            targetRoutes = globalFlowData
+                .filter(d => d.origin_name === dataObj.name || d.dest_name === dataObj.name)
+                .map(d => d.route_name);
+        } else {
+            targetRoutes = [dataObj.route_name];
+        }
+
         mapSvg.selectAll(".route-arc")
-            .classed("muted", d => type === "origin" ? d.origin_name !== nameToMatch : d.route_name !== nameToMatch)
-            .classed("highlight", d => type === "origin" ? d.origin_name === nameToMatch : d.route_name === nameToMatch);
+            .classed("muted", d => !targetRoutes.includes(d.route_name))
+            .classed("highlight", d => targetRoutes.includes(d.route_name));
             
         treeSvg.selectAll(".treemap-node")
-            .classed("muted", d => {
-                if (type === "origin") return d.data.name !== nameToMatch;
-                return d.data.route_name !== nameToMatch;
-            })
-            .classed("highlight", d => {
-                if (type === "origin") return d.data.name === nameToMatch;
-                return d.data.route_name === nameToMatch;
-            });
+            .classed("muted", d => type === "global_airport" ? d.data.name !== dataObj.name : d.data.route_name !== dataObj.route_name)
+            .classed("highlight", d => type === "global_airport" ? d.data.name === dataObj.name : d.data.route_name === dataObj.route_name);
             
         barSvg.selectAll(".bar")
-            .classed("muted", d => type === "origin" ? d.origin_name !== nameToMatch : d.route_name !== nameToMatch)
-            .classed("highlight", d => type === "origin" ? d.origin_name === nameToMatch : d.route_name === nameToMatch);
+            .classed("muted", d => !targetRoutes.includes(d.route_name))
+            .classed("highlight", d => targetRoutes.includes(d.route_name));
 
-        // Tooltip 內容切換
-        let tipHtml = type === "origin" 
-            ? `<strong>出發機場：</strong> ${nameToMatch}<br/><strong>總出發流量：</strong> ${dataObj.value.toLocaleString()} 人`
-            : `<strong>航線：</strong> ${nameToMatch}<br/><strong>載客人數：</strong> ${(dataObj.passengers || dataObj.value).toLocaleString()} 人<br/><strong>載客率：</strong> ${dataObj.load_factor}%`;
+        let tipHtml = type === "global_airport" 
+            ? `<strong>機場：</strong> ${dataObj.name}<br/><strong>關聯總流量：</strong> ${dataObj.value.toLocaleString()} 人`
+            : `<strong>航線：</strong> ${dataObj.route_name}<br/><strong>載客人數：</strong> ${(dataObj.passengers || dataObj.value).toLocaleString()} 人<br/><strong>載客率：</strong> ${dataObj.load_factor}%`;
 
         tooltip.style("opacity", 1).html(tipHtml)
             .style("left", (event.pageX + 15) + "px")
@@ -238,26 +269,27 @@ Promise.all([
     }
 
     // ==========================================
-    // 核心過濾：點擊地圖機場或樹狀圖大方塊下鑽 (含切換機制)
+    // 動態過濾 (點擊機場觸發)
     // ==========================================
-    function filterByOrigin(originName) {
-        // [修正1] 點擊同一個機場時，自動重置過濾 (Toggle)
-        if (currentSelectedOrigin === originName) {
+    function filterByAirport(airportName) {
+        // 【隱含操作】：若點擊同一個機場，視同取消過濾
+        if (currentSelectedAirport === airportName) {
             resetFilter();
             return; 
         }
-        currentSelectedOrigin = originName;
+        currentSelectedAirport = airportName;
 
         mapSvg.selectAll(".route-arc").transition().duration(400)
-            .style("opacity", d => d.origin_name === originName ? 1 : 0.05);
+            .style("opacity", d => (d.origin_name === airportName || d.dest_name === airportName) ? 1 : 0.05);
 
-        renderBarchart(globalFlowData.filter(d => d.origin_name === originName));
-        renderTreemap(originName);
+        const filteredFlow = globalFlowData.filter(d => d.origin_name === airportName || d.dest_name === airportName);
+        renderBarchart(filteredFlow);
+        renderTreemap(airportName);
     }
 
     function resetFilter() {
-        if (!currentSelectedOrigin) return;
-        currentSelectedOrigin = null;
+        if (!currentSelectedAirport) return;
+        currentSelectedAirport = null;
 
         mapSvg.selectAll(".route-arc").transition().duration(400).style("opacity", null);
         renderBarchart(globalFlowData);

@@ -4,25 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>台灣國內航線營運分析 (115年9月)</title>
-  <!-- 引入 D3.js 與 TopoJSON (CDN) -->
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   <script src="https://unpkg.com/topojson-client@3"></script>
   <style>
-    /* 版面與背景層次 (符合淺色簡潔 UI 規範) */
     body {
       font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
       margin: 0;
       padding: 16px;
-      background-color: #f3f4f6; /* 淺灰背景 */
+      background-color: #f3f4f6;
       color: #1f2937;
     }
-    header {
-      margin-bottom: 12px;
-    }
+    header { margin-bottom: 12px; }
     header h2 { margin: 0 0 4px 0; font-size: 20px; }
-    header p { margin: 0; font-size: 14px; color: #6b7280; }
+    /* 更新操作提示，引導使用者如何取消選取 */
+    header p { margin: 0; font-size: 14px; color: #6b7280; line-height: 1.5; }
     
-    /* 儀表板三視圖網格 */
     #dashboard {
       display: flex;
       flex-wrap: wrap;
@@ -38,9 +34,7 @@
       position: relative;
       overflow: hidden;
     }
-    #map-panel {
-      flex: 1 1 45%;
-    }
+    #map-panel { flex: 1 1 45%; }
     #right-panel {
       flex: 1 1 45%;
       display: flex;
@@ -58,6 +52,7 @@
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
       position: relative;
     }
+    
     .panel-title {
       position: absolute;
       top: 10px;
@@ -66,35 +61,28 @@
       font-weight: bold;
       color: #374151;
       pointer-events: none;
+      z-index: 5;
     }
-
+    
     /* 圖表 SVG 樣式 */
     svg { width: 100%; height: 100%; display: block; }
-    
-    /* 地圖 */
-    .county { fill: #e2e8f0; stroke: #ffffff; stroke-width: 0.5px; }
+    .county { fill: #e2e8f0; stroke: #ffffff; stroke-width: 0.5px; cursor: pointer; }
     .airport-node { stroke: #ffffff; stroke-width: 1.5px; cursor: pointer; }
     .route-arc { fill: none; stroke-linecap: round; cursor: pointer; }
-    
-    /* 樹狀圖 */
     .treemap-node { stroke: #ffffff; stroke-width: 1px; cursor: pointer; }
     .treemap-label { font-size: 12px; fill: #ffffff; font-weight: bold; pointer-events: none; }
     .treemap-sublabel { font-size: 10px; fill: #f3f4f6; pointer-events: none; }
-    
-    /* 長條圖 */
     .bar { cursor: pointer; }
     .axis-text { font-size: 11px; fill: #4b5563; }
     
-    /* 共用互動狀態 (透明度控制) */
+    /* 狀態控制 */
     .default-opacity { opacity: 0.85; }
     .muted { opacity: 0.15 !important; transition: opacity 0.3s ease; }
     .highlight { opacity: 1 !important; transition: opacity 0.3s ease; }
-    .hidden { display: none; }
 
-    /* 輔助焦點 (鍵盤操作) */
     :focus { outline: 2px solid #2b6cb0; outline-offset: 2px; }
 
-    /* 共用 Tooltip */
+    /* Tooltip */
     .tooltip {
       position: absolute;
       background-color: rgba(31, 41, 55, 0.95);
@@ -114,17 +102,16 @@
 <body>
   <header>
     <h2>台灣國內航線營運分析 (115年9月)</h2>
-    <p>互動指南：點擊地圖上的「機場圓點」可過濾該機場的出發航線。滑鼠懸停 (Hover) 航線、方塊或長條可觸發三視圖連動高亮。</p>
+    <p>互動指南：點擊地圖「機場圓點」或樹狀圖區塊可過濾該機場出發航線。<br/>
+       💡 <strong>取消選取方式：再次點擊已選取的機場，或點選地圖空白處，即可回到全域視角。</strong></p>
   </header>
 
   <div id="dashboard">
-    <!-- 左側：地理流向圖 -->
     <div id="map-panel" class="panel">
       <div class="panel-title">地理流向圖 (Flow Map)</div>
       <svg id="map-svg" role="img" aria-label="台灣地理航線流向圖"></svg>
     </div>
     
-    <!-- 右側：雙輔助視圖 -->
     <div id="right-panel">
       <div class="sub-panel">
         <div class="panel-title">目的地流量佔比 (Treemap)</div>
@@ -137,7 +124,6 @@
     </div>
   </div>
 
-  <!-- 共用細節提示框 -->
   <div id="tooltip" class="tooltip" role="tooltip" aria-hidden="true"></div>
 
   <script src="main.js"></script>
