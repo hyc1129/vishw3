@@ -1,0 +1,386 @@
+[
+  {
+    "route_name": "臺中—花蓮",
+    "origin_name": "臺中國際機場",
+    "origin_coord": [
+      120.600419866,
+      24.2552615288
+    ],
+    "dest_name": "花蓮機場",
+    "dest_coord": [
+      121.613703583,
+      24.0256445094
+    ],
+    "flights": 18,
+    "passengers": 615,
+    "load_factor": 48.8
+  },
+  {
+    "route_name": "臺中—金門",
+    "origin_name": "臺中國際機場",
+    "origin_coord": [
+      120.600419866,
+      24.2552615288
+    ],
+    "dest_name": "金門機場",
+    "dest_coord": [
+      118.361111,
+      24.428889
+    ],
+    "flights": 702,
+    "passengers": 48670,
+    "load_factor": 84.7
+  },
+  {
+    "route_name": "臺中—澎湖",
+    "origin_name": "臺中國際機場",
+    "origin_coord": [
+      120.600419866,
+      24.2552615288
+    ],
+    "dest_name": "澎湖機場",
+    "dest_coord": [
+      119.628333,
+      23.568611
+    ],
+    "flights": 676,
+    "passengers": 42335,
+    "load_factor": 88.8
+  },
+  {
+    "route_name": "臺北—北竿",
+    "origin_name": "臺北松山國際機場",
+    "origin_coord": [
+      121.551880574,
+      25.0636769655
+    ],
+    "dest_name": "馬祖北竿機場",
+    "dest_coord": [
+      120.002778,
+      26.224167
+    ],
+    "flights": 164,
+    "passengers": 6836,
+    "load_factor": 66.2
+  },
+  {
+    "route_name": "臺北—臺東",
+    "origin_name": "臺北松山國際機場",
+    "origin_coord": [
+      121.551880574,
+      25.0636769655
+    ],
+    "dest_name": "臺東機場",
+    "dest_coord": [
+      121.107136418,
+      22.7563383575
+    ],
+    "flights": 306,
+    "passengers": 17239,
+    "load_factor": 80.5
+  },
+  {
+    "route_name": "臺北—花蓮",
+    "origin_name": "臺北松山國際機場",
+    "origin_coord": [
+      121.551880574,
+      25.0636769655
+    ],
+    "dest_name": "花蓮機場",
+    "dest_coord": [
+      121.613703583,
+      24.0256445094
+    ],
+    "flights": 18,
+    "passengers": 386,
+    "load_factor": 30.6
+  },
+  {
+    "route_name": "臺北—金門",
+    "origin_name": "臺北松山國際機場",
+    "origin_coord": [
+      121.551880574,
+      25.0636769655
+    ],
+    "dest_name": "金門機場",
+    "dest_coord": [
+      118.361111,
+      24.428889
+    ],
+    "flights": 1072,
+    "passengers": 103448,
+    "load_factor": 84.7
+  },
+  {
+    "route_name": "臺北—南竿",
+    "origin_name": "臺北松山國際機場",
+    "origin_coord": [
+      121.551880574,
+      25.0636769655
+    ],
+    "dest_name": "馬祖南竿機場",
+    "dest_coord": [
+      119.958333,
+      26.159722
+    ],
+    "flights": 438,
+    "passengers": 24735,
+    "load_factor": 80.7
+  },
+  {
+    "route_name": "臺北—澎湖",
+    "origin_name": "臺北松山國際機場",
+    "origin_coord": [
+      121.551880574,
+      25.0636769655
+    ],
+    "dest_name": "澎湖機場",
+    "dest_coord": [
+      119.628333,
+      23.568611
+    ],
+    "flights": 998,
+    "passengers": 78110,
+    "load_factor": 82.8
+  },
+  {
+    "route_name": "臺東—綠島",
+    "origin_name": "臺東機場",
+    "origin_coord": [
+      121.107136418,
+      22.7563383575
+    ],
+    "dest_name": "綠島機場",
+    "dest_coord": [
+      121.466862,
+      22.672361
+    ],
+    "flights": 164,
+    "passengers": 2204,
+    "load_factor": 70.7
+  },
+  {
+    "route_name": "臺東—蘭嶼",
+    "origin_name": "臺東機場",
+    "origin_coord": [
+      121.107136418,
+      22.7563383575
+    ],
+    "dest_name": "蘭嶼機場",
+    "dest_coord": [
+      121.535818739,
+      22.0278123735
+    ],
+    "flights": 262,
+    "passengers": 3327,
+    "load_factor": 66.8
+  },
+  {
+    "route_name": "臺南—金門",
+    "origin_name": "臺南機場",
+    "origin_coord": [
+      120.216053822,
+      22.9480169792
+    ],
+    "dest_name": "金門機場",
+    "dest_coord": [
+      118.361111,
+      24.428889
+    ],
+    "flights": 180,
+    "passengers": 11606,
+    "load_factor": 92.1
+  },
+  {
+    "route_name": "臺南—澎湖",
+    "origin_name": "臺南機場",
+    "origin_coord": [
+      120.216053822,
+      22.9480169792
+    ],
+    "dest_name": "澎湖機場",
+    "dest_coord": [
+      119.628333,
+      23.568611
+    ],
+    "flights": 180,
+    "passengers": 11623,
+    "load_factor": 92.2
+  },
+  {
+    "route_name": "澎湖—七美",
+    "origin_name": "澎湖機場",
+    "origin_coord": [
+      119.628333,
+      23.568611
+    ],
+    "dest_name": "七美機場",
+    "dest_coord": [
+      119.4175,
+      23.213056
+    ],
+    "flights": 54,
+    "passengers": 376,
+    "load_factor": 36.6
+  },
+  {
+    "route_name": "高雄—七美",
+    "origin_name": "高雄小港國際機場",
+    "origin_coord": [
+      120.340417727,
+      22.5712348666
+    ],
+    "dest_name": "七美機場",
+    "dest_coord": [
+      119.4175,
+      23.213056
+    ],
+    "flights": 118,
+    "passengers": 1581,
+    "load_factor": 70.5
+  },
+  {
+    "route_name": "高雄—花蓮",
+    "origin_name": "高雄小港國際機場",
+    "origin_coord": [
+      120.340417727,
+      22.5712348666
+    ],
+    "dest_name": "花蓮機場",
+    "dest_coord": [
+      121.613703583,
+      24.0256445094
+    ],
+    "flights": 38,
+    "passengers": 985,
+    "load_factor": 37.0
+  },
+  {
+    "route_name": "高雄—金門",
+    "origin_name": "高雄小港國際機場",
+    "origin_coord": [
+      120.340417727,
+      22.5712348666
+    ],
+    "dest_name": "金門機場",
+    "dest_coord": [
+      118.361111,
+      24.428889
+    ],
+    "flights": 616,
+    "passengers": 39137,
+    "load_factor": 88.1
+  },
+  {
+    "route_name": "高雄—澎湖",
+    "origin_name": "高雄小港國際機場",
+    "origin_coord": [
+      120.340417727,
+      22.5712348666
+    ],
+    "dest_name": "澎湖機場",
+    "dest_coord": [
+      119.628333,
+      23.568611
+    ],
+    "flights": 1058,
+    "passengers": 64688,
+    "load_factor": 83.0
+  },
+  {
+    "route_name": "高雄—望安",
+    "origin_name": "高雄小港國際機場",
+    "origin_coord": [
+      120.340417727,
+      22.5712348666
+    ],
+    "dest_name": "望安機場",
+    "dest_coord": [
+      119.503611,
+      23.369167
+    ],
+    "flights": 18,
+    "passengers": 191,
+    "load_factor": 55.8
+  },
+  {
+    "route_name": "嘉義—金門",
+    "origin_name": "嘉義機場",
+    "origin_coord": [
+      120.403835,
+      23.4547039995
+    ],
+    "dest_name": "金門機場",
+    "dest_coord": [
+      118.361111,
+      24.428889
+    ],
+    "flights": 60,
+    "passengers": 3861,
+    "load_factor": 91.9
+  },
+  {
+    "route_name": "嘉義—澎湖",
+    "origin_name": "嘉義機場",
+    "origin_coord": [
+      120.403835,
+      23.4547039995
+    ],
+    "dest_name": "澎湖機場",
+    "dest_coord": [
+      119.628333,
+      23.568611
+    ],
+    "flights": 60,
+    "passengers": 3631,
+    "load_factor": 86.5
+  },
+  {
+    "route_name": "臺中—南竿",
+    "origin_name": "臺中國際機場",
+    "origin_coord": [
+      120.600419866,
+      24.2552615288
+    ],
+    "dest_name": "馬祖南竿機場",
+    "dest_coord": [
+      119.958333,
+      26.159722
+    ],
+    "flights": 118,
+    "passengers": 7219,
+    "load_factor": 87.4
+  },
+  {
+    "route_name": "高雄—南竿",
+    "origin_name": "高雄小港國際機場",
+    "origin_coord": [
+      120.340417727,
+      22.5712348666
+    ],
+    "dest_name": "馬祖南竿機場",
+    "dest_coord": [
+      119.958333,
+      26.159722
+    ],
+    "flights": 16,
+    "passengers": 1065,
+    "load_factor": 98.8
+  },
+  {
+    "route_name": "金門—澎湖",
+    "origin_name": "金門機場",
+    "origin_coord": [
+      118.361111,
+      24.428889
+    ],
+    "dest_name": "澎湖機場",
+    "dest_coord": [
+      119.628333,
+      23.568611
+    ],
+    "flights": 4,
+    "passengers": 243,
+    "load_factor": 86.8
+  }
+]

@@ -1,0 +1,213 @@
+{
+  "name": "台灣國內航線 (115年9月)",
+  "children": [
+    {
+      "name": "嘉義機場",
+      "children": [
+        {
+          "name": "金門機場",
+          "value": 3861,
+          "route_name": "嘉義—金門",
+          "flights": 60,
+          "load_factor": 91.9
+        },
+        {
+          "name": "澎湖機場",
+          "value": 3631,
+          "route_name": "嘉義—澎湖",
+          "flights": 60,
+          "load_factor": 86.5
+        }
+      ]
+    },
+    {
+      "name": "澎湖機場",
+      "children": [
+        {
+          "name": "七美機場",
+          "value": 376,
+          "route_name": "澎湖—七美",
+          "flights": 54,
+          "load_factor": 36.6
+        }
+      ]
+    },
+    {
+      "name": "臺中國際機場",
+      "children": [
+        {
+          "name": "花蓮機場",
+          "value": 615,
+          "route_name": "臺中—花蓮",
+          "flights": 18,
+          "load_factor": 48.8
+        },
+        {
+          "name": "金門機場",
+          "value": 48670,
+          "route_name": "臺中—金門",
+          "flights": 702,
+          "load_factor": 84.7
+        },
+        {
+          "name": "澎湖機場",
+          "value": 42335,
+          "route_name": "臺中—澎湖",
+          "flights": 676,
+          "load_factor": 88.8
+        },
+        {
+          "name": "馬祖南竿機場",
+          "value": 7219,
+          "route_name": "臺中—南竿",
+          "flights": 118,
+          "load_factor": 87.4
+        }
+      ]
+    },
+    {
+      "name": "臺北松山國際機場",
+      "children": [
+        {
+          "name": "馬祖北竿機場",
+          "value": 6836,
+          "route_name": "臺北—北竿",
+          "flights": 164,
+          "load_factor": 66.2
+        },
+        {
+          "name": "臺東機場",
+          "value": 17239,
+          "route_name": "臺北—臺東",
+          "flights": 306,
+          "load_factor": 80.5
+        },
+        {
+          "name": "花蓮機場",
+          "value": 386,
+          "route_name": "臺北—花蓮",
+          "flights": 18,
+          "load_factor": 30.6
+        },
+        {
+          "name": "金門機場",
+          "value": 103448,
+          "route_name": "臺北—金門",
+          "flights": 1072,
+          "load_factor": 84.7
+        },
+        {
+          "name": "馬祖南竿機場",
+          "value": 24735,
+          "route_name": "臺北—南竿",
+          "flights": 438,
+          "load_factor": 80.7
+        },
+        {
+          "name": "澎湖機場",
+          "value": 78110,
+          "route_name": "臺北—澎湖",
+          "flights": 998,
+          "load_factor": 82.8
+        }
+      ]
+    },
+    {
+      "name": "臺南機場",
+      "children": [
+        {
+          "name": "金門機場",
+          "value": 11606,
+          "route_name": "臺南—金門",
+          "flights": 180,
+          "load_factor": 92.1
+        },
+        {
+          "name": "澎湖機場",
+          "value": 11623,
+          "route_name": "臺南—澎湖",
+          "flights": 180,
+          "load_factor": 92.2
+        }
+      ]
+    },
+    {
+      "name": "臺東機場",
+      "children": [
+        {
+          "name": "綠島機場",
+          "value": 2204,
+          "route_name": "臺東—綠島",
+          "flights": 164,
+          "load_factor": 70.7
+        },
+        {
+          "name": "蘭嶼機場",
+          "value": 3327,
+          "route_name": "臺東—蘭嶼",
+          "flights": 262,
+          "load_factor": 66.8
+        }
+      ]
+    },
+    {
+      "name": "金門機場",
+      "children": [
+        {
+          "name": "澎湖機場",
+          "value": 243,
+          "route_name": "金門—澎湖",
+          "flights": 4,
+          "load_factor": 86.8
+        }
+      ]
+    },
+    {
+      "name": "高雄小港國際機場",
+      "children": [
+        {
+          "name": "七美機場",
+          "value": 1581,
+          "route_name": "高雄—七美",
+          "flights": 118,
+          "load_factor": 70.5
+        },
+        {
+          "name": "花蓮機場",
+          "value": 985,
+          "route_name": "高雄—花蓮",
+          "flights": 38,
+          "load_factor": 37.0
+        },
+        {
+          "name": "金門機場",
+          "value": 39137,
+          "route_name": "高雄—金門",
+          "flights": 616,
+          "load_factor": 88.1
+        },
+        {
+          "name": "澎湖機場",
+          "value": 64688,
+          "route_name": "高雄—澎湖",
+          "flights": 1058,
+          "load_factor": 83.0
+        },
+        {
+          "name": "望安機場",
+          "value": 191,
+          "route_name": "高雄—望安",
+          "flights": 18,
+          "load_factor": 55.8
+        },
+        {
+          "name": "馬祖南竿機場",
+          "value": 1065,
+          "route_name": "高雄—南竿",
+          "flights": 16,
+          "load_factor": 98.8
+        }
+      ]
+    }
+  ]
+}
